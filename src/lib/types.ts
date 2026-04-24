@@ -17,6 +17,7 @@ export interface Settings {
   pickup_longitude: string
   pickup_phone: string
   delivery_radius_km: number
+  max_delivery_fee: number
 }
 
 export interface MenuItem {

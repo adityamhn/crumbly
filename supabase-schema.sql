@@ -16,7 +16,8 @@ CREATE TABLE settings (
   pickup_latitude text DEFAULT '',
   pickup_longitude text DEFAULT '',
   pickup_phone text DEFAULT '',
-  delivery_radius_km int DEFAULT 10
+  delivery_radius_km int DEFAULT 5,
+  max_delivery_fee decimal(10,2) DEFAULT 125
 );
 
 -- Insert default settings row (password: admin123 - CHANGE THIS)

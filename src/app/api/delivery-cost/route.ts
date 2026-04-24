@@ -40,12 +40,20 @@ export async function POST(req: Request) {
 
   if (!result.is_successful) {
     return NextResponse.json(
-      { error: 'Cannot deliver to this address', details: result.errors },
+      { error: 'Your address is not deliverable.' },
       { status: 400 }
     )
   }
 
-  return NextResponse.json({
-    delivery_cost: parseFloat(result.order!.payment_amount),
-  })
+  const cost = parseFloat(result.order!.payment_amount)
+  const maxFee = settings.max_delivery_fee || 125
+
+  if (cost > maxFee) {
+    return NextResponse.json(
+      { error: 'Your address is not deliverable.' },
+      { status: 400 }
+    )
+  }
+
+  return NextResponse.json({ delivery_cost: cost })
 }

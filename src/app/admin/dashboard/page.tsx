@@ -36,15 +36,15 @@ export default function AdminDashboard() {
     })
   }
 
-  if (loading) return <div className="text-center py-12 text-amber-600">Loading...</div>
+  if (loading) return <div className="text-center py-12 text-pink-600">Loading...</div>
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-amber-900 mb-6">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-pink-900 mb-6">Dashboard</h1>
 
       {/* Page Mode Toggle */}
       <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
-        <h2 className="font-semibold text-amber-900 mb-3">Page Mode</h2>
+        <h2 className="font-semibold text-pink-900 mb-3">Page Mode</h2>
         <div className="flex gap-2">
           {(['closed', 'preorder', 'live'] as PageMode[]).map((mode) => (
             <button
@@ -64,7 +64,7 @@ export default function AdminDashboard() {
             </button>
           ))}
         </div>
-        <p className="text-xs text-amber-500 mt-2">
+        <p className="text-xs text-pink-500 mt-2">
           {pageMode === 'closed' && 'Customers see a "We\'re closed" message'}
           {pageMode === 'preorder' && 'Customers can pre-order for upcoming delivery slots'}
           {pageMode === 'live' && 'Customers can order for same-day / next-day delivery'}
@@ -87,8 +87,8 @@ export default function AdminDashboard() {
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm">
-      <p className="text-sm text-amber-600">{label}</p>
-      <p className="text-2xl font-bold text-amber-900 mt-1">{value}</p>
+      <p className="text-sm text-pink-600">{label}</p>
+      <p className="text-2xl font-bold text-pink-900 mt-1">{value}</p>
     </div>
   )
 }

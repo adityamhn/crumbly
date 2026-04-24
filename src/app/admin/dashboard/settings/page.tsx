@@ -18,6 +18,7 @@ interface SettingsForm {
   pickup_longitude: string
   pickup_phone: string
   delivery_radius_km: number
+  max_delivery_fee: number
 }
 
 export default function SettingsPage() {
@@ -36,7 +37,8 @@ export default function SettingsPage() {
     pickup_latitude: '',
     pickup_longitude: '',
     pickup_phone: '',
-    delivery_radius_km: 10,
+    delivery_radius_km: 5,
+    max_delivery_fee: 125,
   })
   const [newPassword, setNewPassword] = useState('')
   const [saving, setSaving] = useState(false)
@@ -62,7 +64,8 @@ export default function SettingsPage() {
           pickup_latitude: data.pickup_latitude || '',
           pickup_longitude: data.pickup_longitude || '',
           pickup_phone: data.pickup_phone || '',
-          delivery_radius_km: data.delivery_radius_km || 10,
+          delivery_radius_km: data.delivery_radius_km || 5,
+          max_delivery_fee: data.max_delivery_fee ?? 125,
         })
         setLoading(false)
       })
@@ -96,18 +99,18 @@ export default function SettingsPage() {
     setTimeout(() => setSaved(false), 2000)
   }
 
-  if (loading) return <div className="text-center py-12 text-amber-600">Loading...</div>
+  if (loading) return <div className="text-center py-12 text-pink-600">Loading...</div>
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-amber-900 mb-6">Settings</h1>
+      <h1 className="text-2xl font-bold text-pink-900 mb-6">Settings</h1>
       <form onSubmit={handleSave} className="space-y-6 max-w-2xl">
         {/* Branding */}
         <Section title="Branding">
           <Field label="Bakery Name" value={form.bakery_name} onChange={v => setForm(p => ({ ...p, bakery_name: v }))} />
           <Field label="Description" value={form.description} onChange={v => setForm(p => ({ ...p, description: v }))} textarea />
           <div>
-            <label className="block text-sm font-medium text-amber-800 mb-1">Logo</label>
+            <label className="block text-sm font-medium text-pink-800 mb-1">Logo</label>
             {form.logo_url && <img src={form.logo_url} alt="Logo" className="h-16 mb-2 rounded-lg" />}
             <input type="file" accept="image/*" onChange={e => e.target.files?.[0] && handleUpload('logo_url', e.target.files[0])} className="text-sm" />
           </div>
@@ -117,7 +120,7 @@ export default function SettingsPage() {
         <Section title="Payment">
           <Field label="UPI ID" value={form.upi_id} onChange={v => setForm(p => ({ ...p, upi_id: v }))} placeholder="name@upi" />
           <div>
-            <label className="block text-sm font-medium text-amber-800 mb-1">QR Code</label>
+            <label className="block text-sm font-medium text-pink-800 mb-1">QR Code</label>
             {form.qr_code_url && <img src={form.qr_code_url} alt="QR" className="h-32 mb-2 rounded-lg" />}
             <input type="file" accept="image/*" onChange={e => e.target.files?.[0] && handleUpload('qr_code_url', e.target.files[0])} className="text-sm" />
           </div>
@@ -142,7 +145,8 @@ export default function SettingsPage() {
             <Field label="Longitude" value={form.pickup_longitude} onChange={v => setForm(p => ({ ...p, pickup_longitude: v }))} />
           </div>
           <Field label="Pickup Phone" value={form.pickup_phone} onChange={v => setForm(p => ({ ...p, pickup_phone: v }))} placeholder="919876543210" />
-          <Field label="Delivery Radius (km)" value={String(form.delivery_radius_km)} onChange={v => setForm(p => ({ ...p, delivery_radius_km: parseInt(v) || 10 }))} type="number" />
+          <Field label="Delivery Radius (km)" value={String(form.delivery_radius_km)} onChange={v => setForm(p => ({ ...p, delivery_radius_km: parseInt(v) || 5 }))} type="number" />
+          <Field label="Max Delivery Amount (₹)" value={String(form.max_delivery_fee)} onChange={v => setForm(p => ({ ...p, max_delivery_fee: parseFloat(v) || 125 }))} type="number" placeholder="125" />
         </Section>
 
         {/* Password */}
@@ -153,7 +157,7 @@ export default function SettingsPage() {
         <button
           type="submit"
           disabled={saving}
-          className="bg-amber-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-amber-700 disabled:opacity-50 transition-colors"
+          className="bg-pink-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-pink-700 disabled:opacity-50 transition-colors"
         >
           {saving ? 'Saving...' : saved ? 'Saved!' : 'Save Settings'}
         </button>
@@ -165,7 +169,7 @@ export default function SettingsPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm">
-      <h2 className="font-semibold text-amber-900 mb-4">{title}</h2>
+      <h2 className="font-semibold text-pink-900 mb-4">{title}</h2>
       <div className="space-y-4">{children}</div>
     </div>
   )
@@ -176,10 +180,10 @@ function Field({
 }: {
   label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string; textarea?: boolean
 }) {
-  const className = "w-full px-4 py-2.5 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+  const className = "w-full px-4 py-2.5 border border-pink-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm"
   return (
     <div>
-      <label className="block text-sm font-medium text-amber-800 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-pink-800 mb-1">{label}</label>
       {textarea ? (
         <textarea value={value} onChange={e => onChange(e.target.value)} className={className} rows={3} placeholder={placeholder} />
       ) : (

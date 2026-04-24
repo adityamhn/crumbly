@@ -113,7 +113,7 @@ export default function OrderPage() {
     if (res.ok) {
       setDeliveryCost(data.delivery_cost)
     } else {
-      setDeliveryError('Sorry, we cannot deliver to this address. We deliver within 10km of Diamond District.')
+      setDeliveryError(data.error || 'Sorry, we cannot deliver to this address.')
     }
   }
 
@@ -167,8 +167,8 @@ export default function OrderPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-amber-50">
-        <p className="text-amber-600">Loading...</p>
+      <div className="min-h-screen flex items-center justify-center bg-pink-50">
+        <p className="text-pink-600">Loading...</p>
       </div>
     )
   }
@@ -178,13 +178,13 @@ export default function OrderPage() {
   // Closed mode
   if (settings.page_mode === 'closed') {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-amber-50 p-6 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-pink-50 p-6 text-center">
         {settings.logo_url && <img src={settings.logo_url} alt={settings.bakery_name} className="h-24 mb-4 rounded-2xl" />}
-        <h1 className="text-3xl font-bold text-amber-900 mb-2">{settings.bakery_name}</h1>
-        <p className="text-amber-600 mb-4">{settings.description}</p>
+        <h1 className="text-3xl font-bold text-pink-900 mb-2">{settings.bakery_name}</h1>
+        <p className="text-pink-600 mb-4">{settings.description}</p>
         <div className="bg-white rounded-2xl p-6 shadow-sm max-w-sm w-full">
-          <p className="text-amber-800 font-medium">We&apos;re currently closed</p>
-          <p className="text-amber-500 text-sm mt-2">Check back on Friday evening for pre-orders!</p>
+          <p className="text-pink-800 font-medium">We&apos;re currently closed</p>
+          <p className="text-pink-500 text-sm mt-2">Check back on Friday evening for pre-orders!</p>
         </div>
         {settings.whatsapp_number && (
           <a
@@ -200,14 +200,14 @@ export default function OrderPage() {
   }
 
   return (
-    <div className="min-h-screen bg-amber-50">
+    <div className="min-h-screen bg-pink-50">
       {/* Header */}
-      <header className="bg-white border-b border-amber-100 sticky top-0 z-40">
+      <header className="bg-white border-b border-pink-100 sticky top-0 z-40">
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
           {settings.logo_url && <img src={settings.logo_url} alt="" className="h-10 w-10 rounded-xl object-cover" />}
           <div>
-            <h1 className="font-bold text-amber-900 text-lg leading-tight">{settings.bakery_name}</h1>
-            <p className="text-xs text-amber-500">
+            <h1 className="font-bold text-pink-900 text-lg leading-tight">{settings.bakery_name}</h1>
+            <p className="text-xs text-pink-500">
               {settings.page_mode === 'preorder' ? 'Pre-order' : 'Order Now'}
             </p>
           </div>
@@ -215,7 +215,7 @@ export default function OrderPage() {
         {/* Step indicator */}
         <div className="max-w-lg mx-auto px-4 pb-2 flex gap-2">
           {[1, 2, 3].map(s => (
-            <div key={s} className={`h-1 flex-1 rounded-full ${step >= s ? 'bg-amber-500' : 'bg-amber-200'}`} />
+            <div key={s} className={`h-1 flex-1 rounded-full ${step >= s ? 'bg-pink-500' : 'bg-pink-200'}`} />
           ))}
         </div>
       </header>
@@ -224,7 +224,7 @@ export default function OrderPage() {
         {/* Step 1: Menu */}
         {step === 1 && (
           <div>
-            <h2 className="text-lg font-bold text-amber-900 mb-4">Choose your items</h2>
+            <h2 className="text-lg font-bold text-pink-900 mb-4">Choose your items</h2>
             <div className="space-y-3">
               {menuItems.map(item => {
                 const qty = getCartQty(item.id)
@@ -235,15 +235,15 @@ export default function OrderPage() {
                       {item.image_url ? (
                         <img src={item.image_url} alt={item.name} className="w-28 h-28 object-cover" />
                       ) : (
-                        <div className="w-28 h-28 bg-amber-100 flex items-center justify-center text-amber-300 text-3xl">?</div>
+                        <div className="w-28 h-28 bg-pink-100 flex items-center justify-center text-pink-300 text-3xl">?</div>
                       )}
                       <div className="flex-1 p-3 flex flex-col justify-between">
                         <div>
-                          <h3 className="font-semibold text-amber-900">{item.name}</h3>
-                          {item.description && <p className="text-xs text-amber-500 mt-0.5 line-clamp-2">{item.description}</p>}
+                          <h3 className="font-semibold text-pink-900">{item.name}</h3>
+                          {item.description && <p className="text-xs text-pink-500 mt-0.5 line-clamp-2">{item.description}</p>}
                         </div>
                         <div className="flex items-center justify-between mt-2">
-                          <span className="font-bold text-amber-800">₹{item.price}</span>
+                          <span className="font-bold text-pink-800">₹{item.price}</span>
                           {soldOut ? (
                             <span className="text-xs text-red-500 font-medium">Sold Out</span>
                           ) : (
@@ -251,22 +251,22 @@ export default function OrderPage() {
                               {qty > 0 && (
                                 <button
                                   onClick={() => updateCart(item, qty - 1)}
-                                  className="w-8 h-8 rounded-full bg-amber-100 text-amber-800 font-bold flex items-center justify-center"
+                                  className="w-8 h-8 rounded-full bg-pink-100 text-pink-800 font-bold flex items-center justify-center"
                                 >
                                   -
                                 </button>
                               )}
-                              {qty > 0 && <span className="font-semibold text-amber-900 w-4 text-center">{qty}</span>}
+                              {qty > 0 && <span className="font-semibold text-pink-900 w-4 text-center">{qty}</span>}
                               <button
                                 onClick={() => {
                                   if (qty < item.available_quantity) updateCart(item, qty + 1)
                                 }}
                                 disabled={qty >= item.available_quantity}
-                                className="w-8 h-8 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center disabled:opacity-50"
+                                className="w-8 h-8 rounded-full bg-pink-500 text-white font-bold flex items-center justify-center disabled:opacity-50"
                               >
                                 +
                               </button>
-                              {qty > 0 && <span className="text-xs text-amber-400">{item.available_quantity - qty} left</span>}
+                              {qty > 0 && <span className="text-xs text-pink-400">{item.available_quantity - qty} left</span>}
                             </div>
                           )}
                         </div>
@@ -282,7 +282,7 @@ export default function OrderPage() {
         {/* Step 2: Details & Payment */}
         {step === 2 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-amber-900">Your details</h2>
+            <h2 className="text-lg font-bold text-pink-900">Your details</h2>
 
             <div className="bg-white rounded-2xl p-4 shadow-sm space-y-4">
               <InputField label="Name" value={name} onChange={setName} placeholder="Your name" />
@@ -299,9 +299,9 @@ export default function OrderPage() {
                       setDeliveryCost(null)
                       setDeliveryError('')
                     }}
-                    className="w-5 h-5 rounded accent-amber-600"
+                    className="w-5 h-5 rounded accent-pink-600"
                   />
-                  <span className="text-sm font-medium text-amber-800">I live in Diamond District</span>
+                  <span className="text-sm font-medium text-pink-800">I live in Diamond District</span>
                 </label>
               </div>
 
@@ -335,9 +335,9 @@ export default function OrderPage() {
 
             {/* Delivery Slot */}
             <div className="bg-white rounded-2xl p-4 shadow-sm">
-              <label className="block text-sm font-medium text-amber-800 mb-2">Delivery Slot</label>
+              <label className="block text-sm font-medium text-pink-800 mb-2">Delivery Slot</label>
               {slots.length === 0 ? (
-                <p className="text-sm text-amber-500">No delivery slots available right now.</p>
+                <p className="text-sm text-pink-500">No delivery slots available right now.</p>
               ) : (
                 <div className="grid gap-2">
                   {slots.map(slot => {
@@ -354,13 +354,13 @@ export default function OrderPage() {
                         onClick={() => setSelectedSlot(slot.id)}
                         className={`text-left p-3 rounded-xl border-2 transition-colors ${
                           selectedSlot === slot.id
-                            ? 'border-amber-500 bg-amber-50'
-                            : 'border-amber-100 hover:border-amber-300'
+                            ? 'border-pink-500 bg-pink-50'
+                            : 'border-pink-100 hover:border-pink-300'
                         }`}
                       >
-                        <p className="font-medium text-amber-900">{date}</p>
-                        <p className="text-sm text-amber-600">{formatT(slot.start_time)} - {formatT(slot.end_time)}</p>
-                        <p className="text-xs text-amber-400 mt-0.5">{spotsLeft} spot{spotsLeft !== 1 ? 's' : ''} left</p>
+                        <p className="font-medium text-pink-900">{date}</p>
+                        <p className="text-sm text-pink-600">{formatT(slot.start_time)} - {formatT(slot.end_time)}</p>
+                        <p className="text-xs text-pink-400 mt-0.5">{spotsLeft} spot{spotsLeft !== 1 ? 's' : ''} left</p>
                       </button>
                     )
                   })}
@@ -370,45 +370,45 @@ export default function OrderPage() {
 
             {/* Order Summary */}
             <div className="bg-white rounded-2xl p-4 shadow-sm">
-              <h3 className="font-semibold text-amber-900 mb-2">Order Summary</h3>
+              <h3 className="font-semibold text-pink-900 mb-2">Order Summary</h3>
               {cart.map(c => (
                 <div key={c.menuItem.id} className="flex justify-between text-sm py-1">
-                  <span className="text-amber-700">{c.menuItem.name} x{c.quantity}</span>
+                  <span className="text-pink-700">{c.menuItem.name} x{c.quantity}</span>
                   <span className="font-medium">₹{c.menuItem.price * c.quantity}</span>
                 </div>
               ))}
-              <hr className="border-amber-100 my-2" />
+              <hr className="border-pink-100 my-2" />
               <div className="flex justify-between text-sm">
-                <span className="text-amber-600">Subtotal</span>
+                <span className="text-pink-600">Subtotal</span>
                 <span className="font-medium">₹{subtotal}</span>
               </div>
               {!isDDResident && deliveryCost !== null && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-amber-600">Delivery</span>
+                  <span className="text-pink-600">Delivery</span>
                   <span className="font-medium">₹{deliveryCost}</span>
                 </div>
               )}
               <div className="flex justify-between text-base mt-1">
-                <span className="font-bold text-amber-900">Total</span>
-                <span className="font-bold text-amber-900">₹{total}</span>
+                <span className="font-bold text-pink-900">Total</span>
+                <span className="font-bold text-pink-900">₹{total}</span>
               </div>
             </div>
 
             {/* Payment */}
             {(isDDResident || deliveryCost !== null) && (
               <div className="bg-white rounded-2xl p-4 shadow-sm">
-                <h3 className="font-semibold text-amber-900 mb-2">Payment</h3>
-                <p className="text-sm text-amber-600 mb-3">
-                  Pay <span className="font-bold text-amber-900">₹{total}</span> via UPI and upload the screenshot
+                <h3 className="font-semibold text-pink-900 mb-2">Payment</h3>
+                <p className="text-sm text-pink-600 mb-3">
+                  Pay <span className="font-bold text-pink-900">₹{total}</span> via UPI and upload the screenshot
                 </p>
                 {settings.upi_id && (
-                  <p className="text-sm text-amber-700 mb-2">UPI ID: <span className="font-mono font-medium select-all">{settings.upi_id}</span></p>
+                  <p className="text-sm text-pink-700 mb-2">UPI ID: <span className="font-mono font-medium select-all">{settings.upi_id}</span></p>
                 )}
                 {settings.qr_code_url && (
                   <img src={settings.qr_code_url} alt="UPI QR" className="h-48 mx-auto rounded-xl mb-3" />
                 )}
                 <div>
-                  <label className="block text-sm font-medium text-amber-800 mb-1">Payment Screenshot</label>
+                  <label className="block text-sm font-medium text-pink-800 mb-1">Payment Screenshot</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -429,18 +429,18 @@ export default function OrderPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-amber-900 mb-2">Order Confirmed!</h2>
-            <p className="text-amber-600 mb-6">Your order <span className="font-bold">{orderResult.order_number}</span> has been placed.</p>
+            <h2 className="text-2xl font-bold text-pink-900 mb-2">Order Confirmed!</h2>
+            <p className="text-pink-600 mb-6">Your order <span className="font-bold">{orderResult.order_number}</span> has been placed.</p>
 
             <div className="bg-white rounded-2xl p-4 shadow-sm text-left mb-4">
-              <h3 className="font-semibold text-amber-900 mb-2">Order Details</h3>
+              <h3 className="font-semibold text-pink-900 mb-2">Order Details</h3>
               {cart.map(c => (
                 <div key={c.menuItem.id} className="flex justify-between text-sm py-1">
                   <span>{c.menuItem.name} x{c.quantity}</span>
                   <span className="font-medium">₹{c.menuItem.price * c.quantity}</span>
                 </div>
               ))}
-              <hr className="border-amber-100 my-2" />
+              <hr className="border-pink-100 my-2" />
               <div className="flex justify-between font-bold">
                 <span>Total</span>
                 <span>₹{total}</span>
@@ -468,7 +468,7 @@ export default function OrderPage() {
                 fetch('/api/menu').then(r => r.json()).then(setMenuItems)
                 fetch('/api/slots').then(r => r.json()).then(setSlots)
               }}
-              className="block w-full bg-amber-100 text-amber-800 px-6 py-3 rounded-xl font-medium hover:bg-amber-200"
+              className="block w-full bg-pink-100 text-pink-800 px-6 py-3 rounded-xl font-medium hover:bg-pink-200"
             >
               Place Another Order
             </button>
@@ -478,18 +478,18 @@ export default function OrderPage() {
 
       {/* Bottom Bar - Step 1 & 2 */}
       {step < 3 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-amber-200 p-4 z-40">
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-pink-200 p-4 z-40">
           <div className="max-w-lg mx-auto">
             {step === 1 && (
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-amber-600">{cart.length} item{cart.length !== 1 ? 's' : ''}</p>
-                  <p className="font-bold text-amber-900">₹{subtotal}</p>
+                  <p className="text-sm text-pink-600">{cart.length} item{cart.length !== 1 ? 's' : ''}</p>
+                  <p className="font-bold text-pink-900">₹{subtotal}</p>
                 </div>
                 <button
                   onClick={() => setStep(2)}
                   disabled={cart.length === 0}
-                  className="bg-amber-600 text-white px-8 py-3 rounded-xl font-medium hover:bg-amber-700 disabled:opacity-50 transition-colors"
+                  className="bg-pink-600 text-white px-8 py-3 rounded-xl font-medium hover:bg-pink-700 disabled:opacity-50 transition-colors"
                 >
                   Next
                 </button>
@@ -499,7 +499,7 @@ export default function OrderPage() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setStep(1)}
-                  className="bg-amber-100 text-amber-800 px-4 py-3 rounded-xl font-medium hover:bg-amber-200"
+                  className="bg-pink-100 text-pink-800 px-4 py-3 rounded-xl font-medium hover:bg-pink-200"
                 >
                   Back
                 </button>
@@ -514,7 +514,7 @@ export default function OrderPage() {
                     !screenshotFile ||
                     (!isDDResident && deliveryCost === null)
                   }
-                  className="flex-1 bg-amber-600 text-white py-3 rounded-xl font-medium hover:bg-amber-700 disabled:opacity-50 transition-colors"
+                  className="flex-1 bg-pink-600 text-white py-3 rounded-xl font-medium hover:bg-pink-700 disabled:opacity-50 transition-colors"
                 >
                   {submitting ? 'Placing Order...' : `Place Order · ₹${total}`}
                 </button>
@@ -532,10 +532,10 @@ function InputField({
 }: {
   label: string; value: string; onChange: (v: string) => void; placeholder?: string; textarea?: boolean
 }) {
-  const className = "w-full px-4 py-2.5 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+  const className = "w-full px-4 py-2.5 border border-pink-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm"
   return (
     <div>
-      <label className="block text-sm font-medium text-amber-800 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-pink-800 mb-1">{label}</label>
       {textarea ? (
         <textarea value={value} onChange={e => onChange(e.target.value)} className={className} rows={3} placeholder={placeholder} />
       ) : (
