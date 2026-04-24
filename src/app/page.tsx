@@ -179,8 +179,11 @@ export default function OrderPage() {
   if (settings.page_mode === 'closed') {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-pink-50 p-6 text-center">
-        {settings.logo_url && <img src={settings.logo_url} alt={settings.bakery_name} className="h-24 mb-4 rounded-2xl" />}
-        <h1 className="text-3xl font-bold text-pink-900 mb-2">{settings.bakery_name}</h1>
+        {settings.logo_url ? (
+          <img src={settings.logo_url} alt={settings.bakery_name} className="h-32 w-auto object-contain mb-4" />
+        ) : (
+          <h1 className="text-3xl font-bold text-pink-900 mb-2">{settings.bakery_name}</h1>
+        )}
         <p className="text-pink-600 mb-4">{settings.description}</p>
         <div className="bg-white rounded-2xl p-6 shadow-sm max-w-sm w-full">
           <p className="text-pink-800 font-medium">We&apos;re currently closed</p>
@@ -201,24 +204,31 @@ export default function OrderPage() {
 
   return (
     <div className="min-h-screen bg-pink-50">
-      {/* Header */}
-      <header className="bg-white border-b border-pink-100 sticky top-0 z-40">
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
-          {settings.logo_url && <img src={settings.logo_url} alt="" className="h-10 w-10 rounded-xl object-cover" />}
-          <div>
-            <h1 className="font-bold text-pink-900 text-lg leading-tight">{settings.bakery_name}</h1>
-            <p className="text-xs text-pink-500">
-              {settings.page_mode === 'preorder' ? 'Pre-order' : 'Order Now'}
-            </p>
-          </div>
+      {/* Hero */}
+      <div className="bg-white border-b border-pink-100">
+        <div className="max-w-lg mx-auto px-4 pt-8 pb-6 text-center relative">
+          <span className="absolute top-4 right-4 text-xs font-medium text-pink-600 bg-pink-50 px-3 py-1 rounded-full">
+            {settings.page_mode === 'preorder' ? 'Pre-order' : 'Order Now'}
+          </span>
+          {settings.logo_url ? (
+            <img src={settings.logo_url} alt={settings.bakery_name} className="h-32 w-auto max-w-full object-contain mx-auto" />
+          ) : (
+            <h1 className="text-4xl font-bold text-pink-900">{settings.bakery_name}</h1>
+          )}
+          {settings.logo_url && (
+            <h1 className="text-2xl font-bold text-pink-900 mt-3">{settings.bakery_name}</h1>
+          )}
+          {settings.description && (
+            <p className="text-sm text-pink-600 mt-1">{settings.description}</p>
+          )}
         </div>
         {/* Step indicator */}
-        <div className="max-w-lg mx-auto px-4 pb-2 flex gap-2">
+        <div className="max-w-lg mx-auto px-4 pb-3 flex gap-2">
           {[1, 2, 3].map(s => (
             <div key={s} className={`h-1 flex-1 rounded-full ${step >= s ? 'bg-pink-500' : 'bg-pink-200'}`} />
           ))}
         </div>
-      </header>
+      </div>
 
       <main className="max-w-lg mx-auto px-4 py-4 pb-32">
         {/* Step 1: Menu */}
