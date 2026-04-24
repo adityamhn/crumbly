@@ -423,7 +423,7 @@ export default function OrderPage() {
                     type="file"
                     accept="image/*"
                     onChange={e => setScreenshotFile(e.target.files?.[0] || null)}
-                    className="text-sm w-full"
+                    className="block w-full text-sm text-pink-700 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-pink-100 file:text-pink-700 file:font-medium file:cursor-pointer hover:file:bg-pink-200"
                   />
                 </div>
               </div>

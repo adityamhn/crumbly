@@ -112,7 +112,7 @@ export default function SettingsPage() {
           <div>
             <label className="block text-sm font-medium text-pink-800 mb-1">Logo</label>
             {form.logo_url && <img src={form.logo_url} alt="Logo" className="h-16 mb-2 rounded-lg" />}
-            <input type="file" accept="image/*" onChange={e => e.target.files?.[0] && handleUpload('logo_url', e.target.files[0])} className="text-sm" />
+            <input type="file" accept="image/*" onChange={e => e.target.files?.[0] && handleUpload('logo_url', e.target.files[0])} className="block w-full text-sm text-pink-700 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-pink-100 file:text-pink-700 file:font-medium file:cursor-pointer hover:file:bg-pink-200" />
           </div>
         </Section>
 
@@ -122,7 +122,7 @@ export default function SettingsPage() {
           <div>
             <label className="block text-sm font-medium text-pink-800 mb-1">QR Code</label>
             {form.qr_code_url && <img src={form.qr_code_url} alt="QR" className="h-32 mb-2 rounded-lg" />}
-            <input type="file" accept="image/*" onChange={e => e.target.files?.[0] && handleUpload('qr_code_url', e.target.files[0])} className="text-sm" />
+            <input type="file" accept="image/*" onChange={e => e.target.files?.[0] && handleUpload('qr_code_url', e.target.files[0])} className="block w-full text-sm text-pink-700 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-pink-100 file:text-pink-700 file:font-medium file:cursor-pointer hover:file:bg-pink-200" />
           </div>
         </Section>
 

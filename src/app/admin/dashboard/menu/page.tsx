@@ -169,7 +169,7 @@ export default function MenuPage() {
                   type="file"
                   accept="image/*"
                   onChange={e => e.target.files?.[0] && handleUploadImage(e.target.files[0])}
-                  className="text-sm"
+                  className="block w-full text-sm text-pink-700 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-pink-100 file:text-pink-700 file:font-medium file:cursor-pointer hover:file:bg-pink-200"
                 />
                 {uploading && <p className="text-xs text-pink-500 mt-1">Uploading...</p>}
               </div>
