@@ -36,9 +36,11 @@ export default function OrderPage() {
   const [calculatingDelivery, setCalculatingDelivery] = useState(false)
   const [screenshotFile, setScreenshotFile] = useState<File | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [upiCopied, setUpiCopied] = useState(false)
 
   // Step 3
   const [orderResult, setOrderResult] = useState<{ order_id: string; order_number: string } | null>(null)
+  const upiCopyResetRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     // Load saved customer info from localStorage
@@ -94,6 +96,20 @@ export default function OrderPage() {
     }, 500)
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current) }
   }, [name, whatsapp, address, isDDResident, buildingNumber, floorNumber, apartmentNumber, deliveryNote])
+
+  useEffect(() => {
+    return () => { if (upiCopyResetRef.current) clearTimeout(upiCopyResetRef.current) }
+  }, [])
+
+  async function copyUpiId() {
+    if (!settings?.upi_id) return
+
+    await navigator.clipboard.writeText(settings.upi_id)
+    setUpiCopied(true)
+
+    if (upiCopyResetRef.current) clearTimeout(upiCopyResetRef.current)
+    upiCopyResetRef.current = setTimeout(() => setUpiCopied(false), 2000)
+  }
 
   async function calculateDelivery() {
     if (isDDResident || !address.trim()) return
@@ -412,7 +428,19 @@ export default function OrderPage() {
                   Pay <span className="font-bold text-pink-900">₹{total}</span> via UPI and upload the screenshot
                 </p>
                 {settings.upi_id && (
-                  <p className="text-sm text-pink-700 mb-2">UPI ID: <span className="font-mono font-medium select-all">{settings.upi_id}</span></p>
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-pink-100 bg-pink-50 px-3 py-2 mb-3">
+                    <p className="text-sm text-pink-700 min-w-0">
+                      UPI ID: <span className="font-mono font-medium select-all break-all">{settings.upi_id}</span>
+                    </p>
+                    <button
+                      type="button"
+                      onClick={copyUpiId}
+                      className="shrink-0 rounded-lg bg-pink-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-pink-700"
+                      aria-label={`Copy UPI ID ${settings.upi_id}`}
+                    >
+                      {upiCopied ? 'Copied' : 'Copy'}
+                    </button>
+                  </div>
                 )}
                 {settings.qr_code_url && (
                   <img src={settings.qr_code_url} alt="UPI QR" className="h-48 mx-auto rounded-xl mb-3" />
