@@ -44,11 +44,17 @@ export default function MenuPage() {
 
   async function handleDelete(id: string) {
     if (!confirm('Delete this item?')) return
-    await fetch('/api/admin/menu', {
+    const res = await fetch('/api/admin/menu', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
     })
+    const data = await res.json().catch(() => null)
+    if (!res.ok) {
+      alert(data?.error || 'Failed to delete item')
+      return
+    }
+    if (data?.hidden && data?.message) alert(data.message)
     loadItems()
   }
 
