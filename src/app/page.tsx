@@ -24,7 +24,6 @@ export default function OrderPage() {
   // Step 2 form fields
   const [name, setName] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
-  const [isDDResident, setIsDDResident] = useState(true)
   const [address, setAddress] = useState('')
   const [buildingNumber, setBuildingNumber] = useState('')
   const [floorNumber, setFloorNumber] = useState('')
@@ -48,7 +47,6 @@ export default function OrderPage() {
       if (d.name) setName(d.name)
       if (d.whatsapp) setWhatsapp(d.whatsapp)
       if (d.address) setAddress(d.address)
-      if (d.isDDResident !== undefined) setIsDDResident(d.isDDResident)
       if (d.buildingNumber) setBuildingNumber(d.buildingNumber)
       if (d.floorNumber) setFloorNumber(d.floorNumber)
       if (d.apartmentNumber) setApartmentNumber(d.apartmentNumber)
@@ -89,14 +87,14 @@ export default function OrderPage() {
     if (debounceRef.current) clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(() => {
       if (name || whatsapp || address) {
-        localStorage.setItem('crumbly_customer', JSON.stringify({ name, whatsapp, address, isDDResident, buildingNumber, floorNumber, apartmentNumber, deliveryNote }))
+        localStorage.setItem('crumbly_customer', JSON.stringify({ name, whatsapp, address, buildingNumber, floorNumber, apartmentNumber, deliveryNote }))
       }
     }, 500)
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current) }
-  }, [name, whatsapp, address, isDDResident, buildingNumber, floorNumber, apartmentNumber, deliveryNote])
+  }, [name, whatsapp, address, buildingNumber, floorNumber, apartmentNumber, deliveryNote])
 
   async function calculateDelivery() {
-    if (isDDResident || !address.trim()) return
+    if (!address.trim()) return
     setCalculatingDelivery(true)
     setDeliveryError('')
     setDeliveryCost(null)
@@ -118,7 +116,7 @@ export default function OrderPage() {
   }
 
   async function handleSubmit() {
-    if (!screenshotFile || !selectedSlot) return
+    if (!screenshotFile || !selectedSlot || deliveryCost === null) return
     setSubmitting(true)
 
     // Upload screenshot
@@ -141,15 +139,15 @@ export default function OrderPage() {
       body: JSON.stringify({
         customer_name: name,
         whatsapp_number: whatsapp,
-        is_dd_resident: isDDResident,
+        is_dd_resident: false,
         address,
-        building_number: isDDResident ? '' : buildingNumber,
-        floor_number: isDDResident ? '' : floorNumber,
-        apartment_number: isDDResident ? '' : apartmentNumber,
-        delivery_note: isDDResident ? '' : deliveryNote,
+        building_number: buildingNumber,
+        floor_number: floorNumber,
+        apartment_number: apartmentNumber,
+        delivery_note: deliveryNote,
         delivery_slot_id: selectedSlot,
         items: cart.map(c => ({ menu_item_id: c.menuItem.id, quantity: c.quantity })),
-        delivery_charge: isDDResident ? 0 : (deliveryCost || 0),
+        delivery_charge: deliveryCost,
         payment_screenshot_url: screenshotUrl,
       }),
     })
@@ -276,7 +274,6 @@ export default function OrderPage() {
                               >
                                 +
                               </button>
-                              {qty > 0 && <span className="text-xs text-pink-400">{item.available_quantity - qty} left</span>}
                             </div>
                           )}
                         </div>
@@ -298,49 +295,28 @@ export default function OrderPage() {
               <InputField label="Name" value={name} onChange={setName} placeholder="Your name" />
               <InputField label="WhatsApp Number" value={whatsapp} onChange={setWhatsapp} placeholder="919876543210" />
 
-              {/* DD Toggle */}
-              <div>
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isDDResident}
-                    onChange={e => {
-                      setIsDDResident(e.target.checked)
-                      setDeliveryCost(null)
-                      setDeliveryError('')
-                    }}
-                    className="w-5 h-5 rounded accent-pink-600"
-                  />
-                  <span className="text-sm font-medium text-pink-800">I live in Diamond District</span>
-                </label>
-              </div>
-
-              {isDDResident ? (
-                <InputField label="Block & Flat Number" value={address} onChange={setAddress} placeholder="e.g. Block A, Flat 301" />
-              ) : (
-                <div className="space-y-3">
-                  <InputField label="Full Delivery Address" value={address} onChange={setAddress} placeholder="Full address with landmark, city" textarea />
-                  <div className="grid grid-cols-3 gap-2">
-                    <InputField label="Building" value={buildingNumber} onChange={setBuildingNumber} placeholder="Optional" />
-                    <InputField label="Floor" value={floorNumber} onChange={setFloorNumber} placeholder="Optional" />
-                    <InputField label="Flat/Unit" value={apartmentNumber} onChange={setApartmentNumber} placeholder="Optional" />
-                  </div>
-                  <InputField label="How to get there" value={deliveryNote} onChange={setDeliveryNote} placeholder="Landmarks, gate instructions, etc. (optional)" />
-                  <button
-                    onClick={calculateDelivery}
-                    disabled={!address.trim() || calculatingDelivery}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
-                  >
-                    {calculatingDelivery ? 'Calculating...' : 'Calculate Delivery Cost'}
-                  </button>
-                  {deliveryCost !== null && (
-                    <p className="text-sm text-green-600 mt-2">Delivery charge: ₹{deliveryCost}</p>
-                  )}
-                  {deliveryError && (
-                    <p className="text-sm text-red-600 mt-2">{deliveryError}</p>
-                  )}
+              <div className="space-y-3">
+                <InputField label="Full Delivery Address" value={address} onChange={setAddress} placeholder="Full address with landmark, city" textarea />
+                <div className="grid grid-cols-3 gap-2">
+                  <InputField label="Building" value={buildingNumber} onChange={setBuildingNumber} placeholder="Optional" />
+                  <InputField label="Floor" value={floorNumber} onChange={setFloorNumber} placeholder="Optional" />
+                  <InputField label="Flat/Unit" value={apartmentNumber} onChange={setApartmentNumber} placeholder="Optional" />
                 </div>
-              )}
+                <InputField label="How to get there" value={deliveryNote} onChange={setDeliveryNote} placeholder="Landmarks, gate instructions, etc. (optional)" />
+                <button
+                  onClick={calculateDelivery}
+                  disabled={!address.trim() || calculatingDelivery}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {calculatingDelivery ? 'Calculating...' : 'Calculate Delivery Cost'}
+                </button>
+                {deliveryCost !== null && (
+                  <p className="text-sm text-green-600 mt-2">Delivery charge: ₹{deliveryCost}</p>
+                )}
+                {deliveryError && (
+                  <p className="text-sm text-red-600 mt-2">{deliveryError}</p>
+                )}
+              </div>
             </div>
 
             {/* Delivery Slot */}
@@ -392,7 +368,7 @@ export default function OrderPage() {
                 <span className="text-pink-600">Subtotal</span>
                 <span className="font-medium">₹{subtotal}</span>
               </div>
-              {!isDDResident && deliveryCost !== null && (
+              {deliveryCost !== null && (
                 <div className="flex justify-between text-sm">
                   <span className="text-pink-600">Delivery</span>
                   <span className="font-medium">₹{deliveryCost}</span>
@@ -405,7 +381,7 @@ export default function OrderPage() {
             </div>
 
             {/* Payment */}
-            {(isDDResident || deliveryCost !== null) && (
+            {deliveryCost !== null && (
               <div className="bg-white rounded-2xl p-4 shadow-sm">
                 <h3 className="font-semibold text-pink-900 mb-2">Payment</h3>
                 <p className="text-sm text-pink-600 mb-3">
@@ -522,7 +498,7 @@ export default function OrderPage() {
                     !address.trim() ||
                     !selectedSlot ||
                     !screenshotFile ||
-                    (!isDDResident && deliveryCost === null)
+                    deliveryCost === null
                   }
                   className="flex-1 bg-pink-600 text-white py-3 rounded-xl font-medium hover:bg-pink-700 disabled:opacity-50 transition-colors"
                 >
