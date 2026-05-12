@@ -29,6 +29,7 @@ export default function OrderPage() {
   const [floorNumber, setFloorNumber] = useState('')
   const [apartmentNumber, setApartmentNumber] = useState('')
   const [deliveryNote, setDeliveryNote] = useState('')
+  const [bakeryNote, setBakeryNote] = useState('')
   const [selectedSlot, setSelectedSlot] = useState('')
   const [deliveryCost, setDeliveryCost] = useState<number | null>(null)
   const [deliveryError, setDeliveryError] = useState('')
@@ -145,6 +146,7 @@ export default function OrderPage() {
         floor_number: floorNumber,
         apartment_number: apartmentNumber,
         delivery_note: deliveryNote,
+        bakery_note: bakeryNote,
         delivery_slot_id: selectedSlot,
         items: cart.map(c => ({ menu_item_id: c.menuItem.id, quantity: c.quantity })),
         delivery_charge: deliveryCost,
@@ -333,7 +335,6 @@ export default function OrderPage() {
                       const hour = parseInt(h)
                       return `${hour % 12 || 12}:${m} ${hour >= 12 ? 'PM' : 'AM'}`
                     }
-                    const spotsLeft = slot.max_orders - slot.current_orders
                     return (
                       <button
                         key={slot.id}
@@ -346,12 +347,26 @@ export default function OrderPage() {
                       >
                         <p className="font-medium text-pink-900">{date}</p>
                         <p className="text-sm text-pink-600">{formatT(slot.start_time)} - {formatT(slot.end_time)}</p>
-                        <p className="text-xs text-pink-400 mt-0.5">{spotsLeft} spot{spotsLeft !== 1 ? 's' : ''} left</p>
                       </button>
                     )
                   })}
                 </div>
               )}
+            </div>
+
+            {/* Note for the bakery */}
+            <div className="bg-white rounded-2xl p-4 shadow-sm">
+              <label className="block text-sm font-medium text-pink-800 mb-1">Note for the bakery</label>
+              <p className="text-xs text-pink-500 mb-2">
+                Anything special we should know? e.g. &ldquo;less sugar&rdquo;, &ldquo;no nuts&rdquo;, &ldquo;write Happy Birthday on top&rdquo;.
+              </p>
+              <textarea
+                value={bakeryNote}
+                onChange={e => setBakeryNote(e.target.value)}
+                rows={3}
+                placeholder="Optional"
+                className="w-full px-4 py-2.5 border border-pink-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm"
+              />
             </div>
 
             {/* Order Summary */}
@@ -451,6 +466,7 @@ export default function OrderPage() {
                 setScreenshotFile(null)
                 setSelectedSlot('')
                 setDeliveryCost(null)
+                setBakeryNote('')
                 fetch('/api/menu').then(r => r.json()).then(setMenuItems)
                 fetch('/api/slots').then(r => r.json()).then(setSlots)
               }}

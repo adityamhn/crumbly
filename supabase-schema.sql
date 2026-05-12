@@ -55,6 +55,7 @@ CREATE TABLE orders (
   whatsapp_number text NOT NULL,
   is_dd_resident boolean NOT NULL DEFAULT true,
   address text NOT NULL,
+  bakery_note text NOT NULL DEFAULT '',
   delivery_slot_id uuid REFERENCES delivery_slots(id),
   subtotal decimal(10,2) NOT NULL,
   delivery_charge decimal(10,2) NOT NULL DEFAULT 0,
@@ -65,6 +66,9 @@ CREATE TABLE orders (
   borzo_status text,
   created_at timestamptz DEFAULT now()
 );
+
+-- Migration for existing installs (idempotent):
+-- ALTER TABLE orders ADD COLUMN IF NOT EXISTS bakery_note text NOT NULL DEFAULT '';
 
 -- Order items
 CREATE TABLE order_items (

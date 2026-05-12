@@ -12,6 +12,7 @@ interface ManualOrderForm {
   floor_number: string
   apartment_number: string
   delivery_note: string
+  bakery_note: string
   delivery_slot_id: string
   delivery_charge: number
   status: 'confirmed' | 'preparing' | 'ready' | 'delivered'
@@ -40,6 +41,7 @@ export default function OrdersPage() {
     floor_number: '',
     apartment_number: '',
     delivery_note: '',
+    bakery_note: '',
     delivery_slot_id: '',
     delivery_charge: 0,
     status: 'confirmed',
@@ -165,6 +167,7 @@ export default function OrdersPage() {
       floor_number: '',
       apartment_number: '',
       delivery_note: '',
+      bakery_note: '',
       delivery_slot_id: '',
       delivery_charge: 0,
       status: 'confirmed',
@@ -356,6 +359,13 @@ export default function OrdersPage() {
                 <span className="font-medium">{formatSlot(selectedOrder)}</span>
               </div>
 
+              {selectedOrder.bakery_note && (
+                <div className="rounded-xl border border-amber-200 bg-amber-50 p-3">
+                  <p className="text-xs font-medium text-amber-700 mb-1">Note for the bakery</p>
+                  <p className="text-sm text-amber-900 whitespace-pre-wrap">{selectedOrder.bakery_note}</p>
+                </div>
+              )}
+
               <hr className="border-pink-100" />
 
               {/* Order Items */}
@@ -478,6 +488,14 @@ export default function OrdersPage() {
                   <Field label="Delivery charge (₹)" value={String(manualForm.delivery_charge)} onChange={v => setManualForm(p => ({ ...p, delivery_charge: parseFloat(v) || 0 }))} type="number" />
                 </>
               )}
+
+              <Field
+                label="Note for the bakery"
+                value={manualForm.bakery_note}
+                onChange={v => setManualForm(p => ({ ...p, bakery_note: v }))}
+                placeholder="e.g. less sugar, no nuts, birthday message"
+                textarea
+              />
 
               {/* Items */}
               <div>

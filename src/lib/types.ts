@@ -53,6 +53,7 @@ export interface Order {
   floor_number: string
   apartment_number: string
   delivery_note: string
+  bakery_note: string
   delivery_slot_id: string
   subtotal: number
   delivery_charge: number

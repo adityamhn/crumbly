@@ -12,6 +12,7 @@ export async function POST(req: Request) {
     floor_number,
     apartment_number,
     delivery_note,
+    bakery_note,
     delivery_slot_id,
     items, // Array of { menu_item_id, quantity }
     delivery_charge,
@@ -83,6 +84,7 @@ export async function POST(req: Request) {
       floor_number: floor_number || '',
       apartment_number: apartment_number || '',
       delivery_note: delivery_note || '',
+      bakery_note: bakery_note || '',
       delivery_slot_id,
       subtotal,
       delivery_charge: delivery_charge || 0,
